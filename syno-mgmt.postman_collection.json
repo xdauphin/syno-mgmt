@@ -1,0 +1,133 @@
+{
+	"info": {
+		"_postman_id": "421f4c63-ca5a-4790-aed7-ac3ef8878998",
+		"name": "syno-mgmt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "syno-login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d4026f80-93b0-4e83-865c-d0b81e039092",
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"my_sid\", 0);",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"if (responseCode.code === 200 && jsonData.success === true) {",
+							"    ",
+							"    postman.setEnvironmentVariable(\"my_sid\", jsonData.data.sid);",
+							"",
+							"    if (environment.my_sid !== 0) {",
+							"        tests[\"Login\"] = true;",
+							"    } else {",
+							"        tests[\"Login\"] = false;",
+							"    }",
+							"} else {",
+							"    tests[\"Login\"] = false;",
+							"}",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://{{syno_address}}:{{syno_port}}/webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account={{my_login}}&passwd={{my_password}}&format=cookie",
+					"protocol": "https",
+					"host": [
+						"{{syno_address}}"
+					],
+					"port": "{{syno_port}}",
+					"path": [
+						"webapi",
+						"auth.cgi"
+					],
+					"query": [
+						{
+							"key": "api",
+							"value": "SYNO.API.Auth"
+						},
+						{
+							"key": "version",
+							"value": "2"
+						},
+						{
+							"key": "method",
+							"value": "login"
+						},
+						{
+							"key": "account",
+							"value": "{{my_login}}"
+						},
+						{
+							"key": "passwd",
+							"value": "{{my_password}}"
+						},
+						{
+							"key": "format",
+							"value": "cookie"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "syno-shutdown",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ca73ff7d-3f9b-447b-801a-84d2aaa99d95",
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"my_sid\", 0);",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"if (responseCode.code === 200 && jsonData.success === true) {",
+							"    tests[\"Shutdown\"] = true;",
+							"} else {",
+							"    tests[\"Shutdown\"] = false;",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "id={{my_sid}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "api=SYNO.Core.System&method=shutdown&version=1"
+				},
+				"url": {
+					"raw": "https://{{syno_address}}:{{syno_port}}/webapi/entry.cgi",
+					"protocol": "https",
+					"host": [
+						"{{syno_address}}"
+					],
+					"port": "{{syno_port}}",
+					"path": [
+						"webapi",
+						"entry.cgi"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
